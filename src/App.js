@@ -1,9 +1,10 @@
 import React from 'react';
-import './App.css';
+// import './App.css';
+import ComponentTable from './components/Table';
 
 function App() {
   return (
-    <span>Hello</span>
+    <ComponentTable />
   );
 }
 
