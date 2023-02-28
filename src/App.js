@@ -1,11 +1,14 @@
 import React from 'react';
-// import './App.css';
+import './App.css';
+import Search from './components/Search';
 import ComponentTable from './components/Table';
+import Provider from './context/provider';
 
-function App() {
+export default function App() {
   return (
-    <ComponentTable />
+    <Provider>
+      <Search />
+      <ComponentTable />
+    </Provider>
   );
 }
-
-export default App;

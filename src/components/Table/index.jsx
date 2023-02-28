@@ -1,27 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import {
   Table, TableCell, TableHead, TableRow,
 } from '@mui/material';
-import getPlanets from '../../utils/getAPI';
+import context from '../../context';
 
 export default function ComponentTable() {
-  const [listPlanets, setListPlanets] = useState([]);
-  const [titleTable, setTitleTable] = useState([]);
-  useEffect(() => {
-    async function getListPlanets() {
-      const planets = await getPlanets();
-      const removedResidents = planets.map((planet) => {
-        delete planet.residents;
-        return planet;
-      });
-      setListPlanets(removedResidents);
-      setTitleTable(Object.keys(removedResidents[0]));
-    }
-    getListPlanets();
-  }, []);
+  const { state: { titleTable, listPlanets } } = useContext(context);
   return (
     <div>
-      {listPlanets.length > 0 && (
+      {listPlanets && (
         <Table
           stickyHeader
           padding="normal"
