@@ -1,4 +1,4 @@
-export const getPlanets = async () => {
+const getPlanets = async () => {
   const dataApi = await fetch('https://swapi.dev/api/planets');
   const dataJson = await dataApi.json();
   const removedResidents = dataJson.results.map((planet) => {
@@ -8,10 +8,12 @@ export const getPlanets = async () => {
   return removedResidents;
 };
 
-export const newRequest = (ondList, listPlanets, search, value) => {
+const newRequest = (oldList, listPlanets, search, value) => {
   if (search.length > value.length) {
-    const planets = ondList;
+    const planets = oldList;
     return planets;
   }
   return listPlanets;
 };
+
+export { getPlanets, newRequest };

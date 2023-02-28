@@ -2,30 +2,30 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import context from './index';
 import { getPlanets, newRequest } from '../utils/getAPI';
+import createFilter from '../utils/filter';
 
 function Provider({ children }) {
-  const [state, setState] = useState({
-    listPlanets: [],
-    ondList: [],
-    titleTable: [],
-    search: '',
-  });
+  const [state, setState] = useState({});
   useEffect(() => {
     async function getListPlanets() {
       const planets = await getPlanets();
       setState({
         listPlanets: planets,
-        ondList: planets,
+        oldList: planets,
         titleTable: Object.keys(planets[0]),
         search: '',
+        column: 'population',
+        comparison: 'maior que',
+        number: '0',
+        listOfFilter: [],
       });
     }
     getListPlanets();
   }, []);
 
-  const handleSearch = async ({ target: { value } }) => {
-    const { listPlanets, search, ondList } = state;
-    const planets = await newRequest(ondList, listPlanets, search, value);
+  const handleSearch = ({ target: { value } }) => {
+    const { listPlanets, search, oldList } = state;
+    const planets = newRequest(oldList, listPlanets, search, value);
     const listPlanetsFilter = planets
       .filter(
         ({ name }) => name
@@ -42,8 +42,31 @@ function Provider({ children }) {
     });
   };
 
+  const handleSelect = ({ target: { value, name } }) => {
+    setState({
+      ...state,
+      [name]: value,
+    });
+  };
+
+  const handleFilter = () => {
+    const { column, comparison, number, listOfFilter, oldList } = state;
+    const filter = {
+      column,
+      comparison,
+      number,
+    };
+    const newListOfFilter = [...listOfFilter, filter];
+    console.log(newListOfFilter);
+    setState({
+      ...state,
+      listOfFilter: newListOfFilter,
+      listPlanets: createFilter(oldList, newListOfFilter),
+    });
+  };
+
   return (
-    <context.Provider value={ { state, handleSearch } }>
+    <context.Provider value={ { state, handleSearch, handleSelect, handleFilter } }>
       {children}
     </context.Provider>
   );

@@ -1,58 +1,42 @@
 import React, { useContext } from 'react';
-import {
-  Table, TableCell, TableHead, TableRow,
-} from '@mui/material';
 import context from '../../context';
 
-export default function ComponentTable() {
+function ComponentTable() {
   const { state: { titleTable, listPlanets } } = useContext(context);
   return (
     <div>
       {listPlanets && (
-        <Table
-          stickyHeader
-          padding="normal"
-          size="medium"
-          sx={ { textAlign: 'center' } }
-        >
-          <TableHead>
-            <TableRow>
+        <table>
+          <thead>
+            <tr>
               {titleTable.map((data) => (
-                <TableCell
-                  sx={
-                    {
-                      backgroundColor: 'rgb(18, 18, 18)',
-                      color: 'white' }
-                  }
+                <th
                   key={ data }
                 >
                   {data}
 
-                </TableCell>
+                </th>
               ))}
-            </TableRow>
-          </TableHead>
+            </tr>
+          </thead>
           <tbody>
             {listPlanets.map((planet) => (
-              <TableRow key={ planet.name }>
+              <tr key={ planet.name }>
                 {Object.values(planet).map((info) => (
-                  <TableCell
-                    sx={
-                      {
-                        backgroundColor: 'rgb(30, 30, 30)',
-                        color: 'white' }
-                    }
+                  <td
                     key={ info }
                   >
                     {info}
 
-                  </TableCell>
+                  </td>
                 ))}
-              </TableRow>
+              </tr>
             ))}
           </tbody>
-        </Table>
+        </table>
       )}
     </div>
   );
 }
+
+export default ComponentTable;
