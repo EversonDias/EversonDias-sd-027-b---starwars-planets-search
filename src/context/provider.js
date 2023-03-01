@@ -5,23 +5,21 @@ import { getPlanets, newRequest } from '../utils/getAPI';
 import createFilter from '../utils/filter';
 
 function Provider({ children }) {
-  const [state, setState] = useState({});
+  const [state, setState] = useState({
+    search: '',
+  });
   useEffect(() => {
     async function getListPlanets() {
       const planets = await getPlanets();
-      const listColumnFilter = [
-        'population',
-        'orbital_period',
-        'diameter',
-        'rotation_period',
-        'surface_water',
-      ];
       setState({
         listPlanets: planets,
         oldList: planets,
         titleTable: Object.keys(planets[0]),
         listOfFilter: [],
-        listColumnFilter,
+        search: '',
+        column: 'population',
+        comparison: 'maior que',
+        number: '0',
       });
     }
     getListPlanets();
@@ -55,16 +53,12 @@ function Provider({ children }) {
 
   const handleFilter = () => {
     const {
+      column,
+      comparison,
+      number,
       listOfFilter,
       listPlanets,
-      listColumnFilter,
     } = state;
-    const {
-      column = listColumnFilter[0],
-      comparison = 'maior que',
-      number = '0',
-    } = state;
-    console.log(comparison);
     const id = column + comparison + number;
     const verifyFilter = listOfFilter.map((data) => data.id === id);
     const isTrue = verifyFilter.includes(true);
@@ -76,45 +70,32 @@ function Provider({ children }) {
         number,
       };
       const newListOfFilter = [...listOfFilter, filter];
-      const newListColumnFilter = listColumnFilter.filter((data) => data !== column);
       setState({
         ...state,
         listOfFilter: newListOfFilter,
         listPlanets: createFilter(listPlanets, newListOfFilter),
-        listColumnFilter: newListColumnFilter,
       });
     }
   };
 
   const handleDelete = ({ target: { id } }) => {
-    const { listOfFilter, listColumnFilter } = state;
+    const { listOfFilter, oldList } = state;
     const newListOfFilter = listOfFilter.filter((filter) => filter.id !== id);
-    let newListColumnFilter;
-    listOfFilter.forEach((filter) => {
-      if (filter.id === id) {
-        newListColumnFilter = filter.column;
-      }
-    });
-    console.log(newListColumnFilter);
     setState({
       ...state,
       listOfFilter: newListOfFilter,
-      listColumnFilter: [...listColumnFilter, newListColumnFilter],
+      listPlanets: createFilter(oldList, newListOfFilter),
     });
   };
 
   const handleDeleteAllFilter = () => {
-    const listColumnFilter = [
-      'population',
-      'orbital_period',
-      'diameter',
-      'rotation_period',
-      'surface_water',
-    ];
+    const {
+      oldList,
+    } = state;
     setState({
       ...state,
       listOfFilter: [],
-      listColumnFilter,
+      listPlanets: oldList,
     });
   };
 

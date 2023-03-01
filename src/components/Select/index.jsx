@@ -9,7 +9,14 @@ function ComponentSelect() {
     handleFilter,
     state,
   } = useContext(context);
-  const { listOfFilter, listColumnFilter } = state;
+  const { listOfFilter } = state;
+  const listColumnFilter = [
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ];
   return (
     <div>
       { listColumnFilter
@@ -19,7 +26,6 @@ function ComponentSelect() {
             onClick={ handleSelect }
             name="column"
             defaultValue={ listColumnFilter[0] }
-            value={ listColumnFilter[0] }
           >
             {listColumnFilter.map((filter) => (
               <option key={ filter } value={ filter }>{filter}</option>
@@ -31,7 +37,7 @@ function ComponentSelect() {
         onClick={ handleSelect }
         name="comparison"
       >
-        <option value="maior que" selected>maior que</option>
+        <option value="maior que">maior que</option>
         <option value="menor que">menor que</option>
         <option value="igual a">igual a</option>
       </select>
@@ -56,17 +62,14 @@ function ComponentSelect() {
           number,
           id,
         } = data;
-        console.log(number);
         return (
-          <div key={ id }>
-            <span key={ id }>
+          <div key={ id } data-testid="filter">
+            <span>
               {
                 `${column} ${comparison} ${number} `
               }
             </span>
             <button
-              data-testid="filter"
-              key={ id }
               id={ id }
               onClick={ handleDelete }
             >

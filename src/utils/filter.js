@@ -33,6 +33,7 @@ const createFilter = (listPlanets, listOfFilter) => {
     });
     return listFilter;
   }
+  return listPlanets;
 };
 
 export default createFilter;
