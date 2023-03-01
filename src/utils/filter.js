@@ -1,10 +1,10 @@
-const createFilter = (oldList, listOfFilter) => {
+const createFilter = (listPlanets, listOfFilter) => {
   if (listOfFilter.length > 0) {
     let listFilter;
     listOfFilter.forEach(({ comparison, column, number }) => {
       switch (comparison) {
       case 'maior que':
-        listFilter = oldList
+        listFilter = listPlanets
           .filter(
             (
               planets,
@@ -12,7 +12,7 @@ const createFilter = (oldList, listOfFilter) => {
           );
         break;
       case 'menor que':
-        listFilter = oldList
+        listFilter = listPlanets
           .filter(
             (
               planets,
@@ -20,7 +20,7 @@ const createFilter = (oldList, listOfFilter) => {
           );
         break;
       case 'igual a':
-        listFilter = oldList
+        listFilter = listPlanets
           .filter(
             (
               planets,

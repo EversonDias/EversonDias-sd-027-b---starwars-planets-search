@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import context from '../../context';
 
 function ComponentSelect() {
-  const { handleSelect, handleFilter } = useContext(context);
+  const { handleSelect, handleFilter, state } = useContext(context);
+  const { listOfFilter } = state;
   return (
     <div>
       <select
@@ -39,6 +40,9 @@ function ComponentSelect() {
       >
         Filtra
       </button>
+      {listOfFilter && listOfFilter.map(({ column,
+        comparison,
+        number }, index) => (<p key={ index }>{column + comparison + number }</p>))}
     </div>
   );
 }

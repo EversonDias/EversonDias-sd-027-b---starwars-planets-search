@@ -50,7 +50,7 @@ function Provider({ children }) {
   };
 
   const handleFilter = () => {
-    const { column, comparison, number, listOfFilter, oldList } = state;
+    const { column, comparison, number, listOfFilter, listPlanets } = state;
     const filter = {
       column,
       comparison,
@@ -61,7 +61,7 @@ function Provider({ children }) {
     setState({
       ...state,
       listOfFilter: newListOfFilter,
-      listPlanets: createFilter(oldList, newListOfFilter),
+      listPlanets: createFilter(listPlanets, newListOfFilter),
     });
   };
 
