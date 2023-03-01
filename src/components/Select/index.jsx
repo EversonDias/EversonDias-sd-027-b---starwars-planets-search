@@ -2,24 +2,33 @@ import React, { useContext } from 'react';
 import context from '../../context';
 
 function ComponentSelect() {
-  const { handleSelect, handleFilter, state } = useContext(context);
-  const { listOfFilter } = state;
+  const {
+    handleDeleteAllFilter,
+    handleDelete,
+    handleSelect,
+    handleFilter,
+    state,
+  } = useContext(context);
+  const { listOfFilter, listColumnFilter } = state;
   return (
     <div>
-      <select
-        data-testid="column-filter"
-        onChange={ handleSelect }
-        name="column"
-      >
-        <option value="population" selected>population</option>
-        <option value="orbital_period">orbital_period</option>
-        <option value="diameter">diameter</option>
-        <option value="rotation_period">rotation_period</option>
-        <option value="surface_water">surface_water</option>
-      </select>
+      { listColumnFilter
+        && (
+          <select
+            data-testid="column-filter"
+            onClick={ handleSelect }
+            name="column"
+            defaultValue={ listColumnFilter[0] }
+            value={ listColumnFilter[0] }
+          >
+            {listColumnFilter.map((filter) => (
+              <option key={ filter } value={ filter }>{filter}</option>
+            ))}
+          </select>
+        )}
       <select
         data-testid="comparison-filter"
-        onChange={ handleSelect }
+        onClick={ handleSelect }
         name="comparison"
       >
         <option value="maior que" selected>maior que</option>
@@ -40,9 +49,38 @@ function ComponentSelect() {
       >
         Filtra
       </button>
-      {listOfFilter && listOfFilter.map(({ column,
-        comparison,
-        number }, index) => (<p key={ index }>{column + comparison + number }</p>))}
+      {listOfFilter && listOfFilter.map((data) => {
+        const {
+          column,
+          comparison,
+          number,
+          id,
+        } = data;
+        console.log(number);
+        return (
+          <div key={ id }>
+            <span key={ id }>
+              {
+                `${column} ${comparison} ${number} `
+              }
+            </span>
+            <button
+              data-testid="filter"
+              key={ id }
+              id={ id }
+              onClick={ handleDelete }
+            >
+              delete
+            </button>
+          </div>
+        );
+      })}
+      <button
+        data-testid="button-remove-filters"
+        onClick={ handleDeleteAllFilter }
+      >
+        Deletar Todos Filtros
+      </button>
     </div>
   );
 }

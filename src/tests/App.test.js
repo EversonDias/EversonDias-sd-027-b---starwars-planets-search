@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import App from '../App';
+import userEvent from '@testing-library/user-event';
 
 describe('test da tela home', () => {
   it('na tele a um input onde pode ser buscar pelo nome do planeta', () => {
@@ -9,10 +10,13 @@ describe('test da tela home', () => {
     expect(getInput).toBeInTheDocument();
   });
 
-  it('na tela tem que ter uma select com as opções de coluna', () => {
+  it('na tela tem que ter uma select com as opções de coluna', async () => {
     render(<App/>)
+    const response = await fetch('https://swapi.dev/api/planets');
+    await waitFor(() => {
     const getSelectColumn = screen.getByTestId('column-filter');
     expect(getSelectColumn).toHaveLength(5)
+    })
   })
 
   it('na tela tem que ter uma select com as opções de comparador', () => {
@@ -36,6 +40,17 @@ describe('test da tela home', () => {
     await waitFor(() => {
       const getRow = screen.getAllByRole('row');
       expect(getRow).toHaveLength(11);
+    })
+  })
+
+  it('Ao Selecionar um filtro ele é aplicado', async () => {
+    render(<App/>)
+    const response = await fetch('https://swapi.dev/api/planets');
+    await waitFor(() => {
+      const getButton = screen.getByTestId('button-filter');
+      userEvent.click(getButton)
+      const getRow = screen.getAllByRole('row');
+      expect(getRow).toHaveLength(1);
     })
   })
 })

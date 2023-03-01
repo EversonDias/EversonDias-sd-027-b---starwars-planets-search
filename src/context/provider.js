@@ -9,15 +9,19 @@ function Provider({ children }) {
   useEffect(() => {
     async function getListPlanets() {
       const planets = await getPlanets();
+      const listColumnFilter = [
+        'population',
+        'orbital_period',
+        'diameter',
+        'rotation_period',
+        'surface_water',
+      ];
       setState({
         listPlanets: planets,
         oldList: planets,
         titleTable: Object.keys(planets[0]),
-        search: '',
-        column: 'population',
-        comparison: 'maior que',
-        number: '0',
         listOfFilter: [],
+        listColumnFilter,
       });
     }
     getListPlanets();
@@ -50,23 +54,81 @@ function Provider({ children }) {
   };
 
   const handleFilter = () => {
-    const { column, comparison, number, listOfFilter, listPlanets } = state;
-    const filter = {
-      column,
-      comparison,
-      number,
-    };
-    const newListOfFilter = [...listOfFilter, filter];
-    console.log(newListOfFilter);
+    const {
+      listOfFilter,
+      listPlanets,
+      listColumnFilter,
+    } = state;
+    const {
+      column = listColumnFilter[0],
+      comparison = 'maior que',
+      number = '0',
+    } = state;
+    console.log(comparison);
+    const id = column + comparison + number;
+    const verifyFilter = listOfFilter.map((data) => data.id === id);
+    const isTrue = verifyFilter.includes(true);
+    if (!isTrue) {
+      const filter = {
+        id,
+        column,
+        comparison,
+        number,
+      };
+      const newListOfFilter = [...listOfFilter, filter];
+      const newListColumnFilter = listColumnFilter.filter((data) => data !== column);
+      setState({
+        ...state,
+        listOfFilter: newListOfFilter,
+        listPlanets: createFilter(listPlanets, newListOfFilter),
+        listColumnFilter: newListColumnFilter,
+      });
+    }
+  };
+
+  const handleDelete = ({ target: { id } }) => {
+    const { listOfFilter, listColumnFilter } = state;
+    const newListOfFilter = listOfFilter.filter((filter) => filter.id !== id);
+    let newListColumnFilter;
+    listOfFilter.forEach((filter) => {
+      if (filter.id === id) {
+        newListColumnFilter = filter.column;
+      }
+    });
+    console.log(newListColumnFilter);
     setState({
       ...state,
       listOfFilter: newListOfFilter,
-      listPlanets: createFilter(listPlanets, newListOfFilter),
+      listColumnFilter: [...listColumnFilter, newListColumnFilter],
+    });
+  };
+
+  const handleDeleteAllFilter = () => {
+    const listColumnFilter = [
+      'population',
+      'orbital_period',
+      'diameter',
+      'rotation_period',
+      'surface_water',
+    ];
+    setState({
+      ...state,
+      listOfFilter: [],
+      listColumnFilter,
     });
   };
 
   return (
-    <context.Provider value={ { state, handleSearch, handleSelect, handleFilter } }>
+    <context.Provider
+      value={ {
+        state,
+        handleSearch,
+        handleSelect,
+        handleFilter,
+        handleDelete,
+        handleDeleteAllFilter,
+      } }
+    >
       {children}
     </context.Provider>
   );
