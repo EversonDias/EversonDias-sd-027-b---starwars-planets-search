@@ -9,14 +9,7 @@ function ComponentSelect() {
     handleFilter,
     state,
   } = useContext(context);
-  const { listOfFilter } = state;
-  const listColumnFilter = [
-    'population',
-    'orbital_period',
-    'diameter',
-    'rotation_period',
-    'surface_water',
-  ];
+  const { listOfFilter, listColumnFilter } = state;
   return (
     <div>
       { listColumnFilter

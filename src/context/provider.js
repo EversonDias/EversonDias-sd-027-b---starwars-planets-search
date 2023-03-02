@@ -11,6 +11,13 @@ function Provider({ children }) {
   useEffect(() => {
     async function getListPlanets() {
       const planets = await getPlanets();
+      const listColumnFilter = [
+        'population',
+        'orbital_period',
+        'diameter',
+        'rotation_period',
+        'surface_water',
+      ];
       setState({
         listPlanets: planets,
         oldList: planets,
@@ -20,6 +27,7 @@ function Provider({ children }) {
         column: 'population',
         comparison: 'maior que',
         number: '0',
+        listColumnFilter,
       });
     }
     getListPlanets();
@@ -60,22 +68,19 @@ function Provider({ children }) {
       listPlanets,
     } = state;
     const id = column + comparison + number;
-    const verifyFilter = listOfFilter.map((data) => data.id === id);
-    const isTrue = verifyFilter.includes(true);
-    if (!isTrue) {
-      const filter = {
-        id,
-        column,
-        comparison,
-        number,
-      };
-      const newListOfFilter = [...listOfFilter, filter];
-      setState({
-        ...state,
-        listOfFilter: newListOfFilter,
-        listPlanets: createFilter(listPlanets, newListOfFilter),
-      });
-    }
+    const newListOfColumns = listOfFilter.map((data) => data.id !== id);
+    const filter = {
+      id,
+      column,
+      comparison,
+      number,
+    };
+    const newListOfFilter = [...listOfFilter, filter];
+    setState({
+      ...state,
+      listOfFilter: newListOfFilter,
+      listPlanets: createFilter(listPlanets, newListOfFilter),
+    });
   };
 
   const handleDelete = ({ target: { id } }) => {
