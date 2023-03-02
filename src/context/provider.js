@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import context from './index';
 import { getPlanets, newRequest } from '../utils/getAPI';
-import createFilter from '../utils/filter';
+import { actionButtonFilter, createFilter } from '../utils/filter';
 
 function Provider({ children }) {
-  const [state, setState] = useState({
-    search: '',
-  });
+  const [state, setState] = useState({});
   useEffect(() => {
     async function getListPlanets() {
       const planets = await getPlanets();
-      const listColumnFilter = [
+      const defaultListOfColumns = [
         'population',
         'orbital_period',
         'diameter',
@@ -22,12 +21,11 @@ function Provider({ children }) {
         listPlanets: planets,
         oldList: planets,
         titleTable: Object.keys(planets[0]),
-        listOfFilter: [],
         search: '',
-        column: 'population',
         comparison: 'maior que',
         number: '0',
-        listColumnFilter,
+        listOfFilter: [],
+        defaultListOfColumns,
       });
     }
     getListPlanets();
@@ -60,61 +58,53 @@ function Provider({ children }) {
   };
 
   const handleFilter = () => {
-    const {
-      column,
-      comparison,
-      number,
-      listOfFilter,
-      listPlanets,
-    } = state;
-    const id = column + comparison + number;
-    const newListOfColumns = listOfFilter.map((data) => data.id !== id);
-    const filter = {
-      id,
-      column,
-      comparison,
-      number,
-    };
-    const newListOfFilter = [...listOfFilter, filter];
     setState({
       ...state,
-      listOfFilter: newListOfFilter,
-      listPlanets: createFilter(listPlanets, newListOfFilter),
-    });
-  };
-
-  const handleDelete = ({ target: { id } }) => {
-    const { listOfFilter, oldList } = state;
-    const newListOfFilter = listOfFilter.filter((filter) => filter.id !== id);
-    setState({
-      ...state,
-      listOfFilter: newListOfFilter,
-      listPlanets: createFilter(oldList, newListOfFilter),
+      ...actionButtonFilter(state),
+      column: undefined,
     });
   };
 
   const handleDeleteAllFilter = () => {
-    const {
-      oldList,
-    } = state;
+    const { oldList } = state;
     setState({
       ...state,
-      listOfFilter: [],
       listPlanets: oldList,
+      listOfFilter: [],
     });
   };
 
+  const handleDeleteFilter = ({ target: { id } }) => {
+    const {
+      listOfFilter,
+      oldList,
+    } = state;
+    const newListOfFiler = listOfFilter.filter((filter) => filter.id !== id);
+    setState({
+      ...state,
+      listOfFilter: newListOfFiler,
+      listPlanets: createFilter(oldList, newListOfFiler),
+    });
+  };
+
+  const values = useMemo(() => ({
+    state,
+    handleFilter,
+    handleSelect,
+    handleSearch,
+    handleDeleteFilter,
+    handleDeleteAllFilter,
+  }), [
+    state,
+    handleFilter,
+    handleSelect,
+    handleSearch,
+    handleDeleteFilter,
+    handleDeleteAllFilter,
+  ]);
+
   return (
-    <context.Provider
-      value={ {
-        state,
-        handleSearch,
-        handleSelect,
-        handleFilter,
-        handleDelete,
-        handleDeleteAllFilter,
-      } }
-    >
+    <context.Provider value={ values }>
       {children}
     </context.Provider>
   );

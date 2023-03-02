@@ -1,8 +1,7 @@
 import React from 'react';
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import App from '../App';
 import userEvent from '@testing-library/user-event';
-import fetchMock from '../../cypress/mocks/testData';
 
 describe('test da tela home', () => {
   it('na tele a um input onde pode ser buscar pelo nome do planeta', () => {
@@ -15,8 +14,8 @@ describe('test da tela home', () => {
     render(<App/>)
     await fetch('https://swapi.dev/api/planets');
     await waitFor(() => {
-    const getSelectColumn = screen.getByTestId('column-filter');
-    expect(getSelectColumn).toHaveLength(5)
+      const getSelectColumn = screen.getByTestId('column-filter');
+      expect(getSelectColumn).toHaveLength(5)
     })
   })
 
@@ -44,4 +43,14 @@ describe('test da tela home', () => {
     })
   })
 
+  it('ao clicar em filtrar deve se filtrado com o valores default', async () => {
+    render(<App/>)
+    await fetch('https://swapi.dev/api/planets');
+    await waitFor(() => {
+      const getButtonFilter = screen.getByTestId('button-filter');
+      userEvent.click(getButtonFilter);
+      const getRow = screen.getAllByRole('row');
+      expect(getRow).toHaveLength(9);
+    })
+  })
 })

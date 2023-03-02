@@ -1,4 +1,4 @@
-const createFilter = (listPlanets, listOfFilter) => {
+export const createFilter = (listPlanets, listOfFilter) => {
   if (listOfFilter.length > 0) {
     let listFilter;
     listOfFilter.forEach(({ comparison, column, number }) => {
@@ -36,4 +36,26 @@ const createFilter = (listPlanets, listOfFilter) => {
   return listPlanets;
 };
 
-export default createFilter;
+export const actionButtonFilter = (state) => {
+  const {
+    defaultListOfColumns,
+    column = defaultListOfColumns[0],
+    comparison,
+    number,
+    listOfFilter,
+    listPlanets,
+  } = state;
+  const id = column + comparison + number;
+  const filter = {
+    id,
+    column,
+    comparison,
+    number,
+  };
+  const newListOfFilter = [...listOfFilter, filter];
+  return {
+    listOfFilter: newListOfFilter,
+    listPlanets: createFilter(listPlanets, newListOfFilter),
+    defaultListOfColumns: defaultListOfColumns.filter((data) => data !== column),
+  };
+};
