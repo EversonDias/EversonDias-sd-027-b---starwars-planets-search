@@ -5,7 +5,7 @@ function Search() {
   const { state: { search }, handleSearch } = useContext(context);
   return (
     <div style={ { textAlign: 'center' } }>
-      <p>Projeto Star Wars -  Trybe</p>
+      <p className="fs-1">Projeto Star Wars -  Trybe</p>
       <input
         type="text"
         data-testid="name-filter"

@@ -11,7 +11,7 @@ function ComponentSelect() {
   } = useContext(context);
   const { listOfFilter, defaultListOfColumns } = state;
   return (
-    <div>
+    <div className="d-flex justify-content-center gap-4 mt-4 mb-4">
       {defaultListOfColumns
       && (
         <select
@@ -19,6 +19,7 @@ function ComponentSelect() {
           onChange={ handleSelect }
           name="column"
           defaultValue={ defaultListOfColumns[0] }
+          className="form-select-sm"
         >
           {defaultListOfColumns.map((column) => (
             <option key={ column } value={ column }>{column}</option>
@@ -29,6 +30,7 @@ function ComponentSelect() {
         data-testid="comparison-filter"
         onChange={ handleSelect }
         name="comparison"
+        className="form-select-sm"
       >
         <option value="maior que" selected>maior que</option>
         <option value="menor que">menor que</option>
@@ -45,6 +47,7 @@ function ComponentSelect() {
         data-testid="button-filter"
         type="button"
         onClick={ handleFilter }
+        className="btn btn-primary"
       >
         Filtra
       </button>
@@ -52,6 +55,7 @@ function ComponentSelect() {
         data-testid="button-remove-filters"
         type="button"
         onClick={ handleDeleteAllFilter }
+        className="btn btn-danger"
       >
         Remover Todos Filtros
       </button>

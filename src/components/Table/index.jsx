@@ -6,12 +6,13 @@ function ComponentTable() {
   return (
     <div>
       {listPlanets && (
-        <table>
+        <table className="table table-striped-columns">
           <thead>
             <tr>
               {titleTable.map((data) => (
                 <th
                   key={ data }
+                  className="w-25"
                 >
                   {data}
                 </th>
@@ -24,9 +25,9 @@ function ComponentTable() {
                 {Object.values(planet).map((info) => (
                   <td
                     key={ info }
+                    className="text-truncate columm"
                   >
                     {info}
-
                   </td>
                 ))}
               </tr>
